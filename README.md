@@ -82,8 +82,9 @@ size and rotation for any page /Rotate value — and is fully unit-tested in iso
 - Vitest for unit tests (coordinate math, formatting, image trimming, validation)
 - GitHub Pages for hosting, deployed via GitHub Actions
 
-No runtime dependencies beyond pdf.js and pdf-lib. No analytics, no cookies, no third-party
-fonts, no telemetry.
+No runtime dependencies beyond pdf.js and pdf-lib. No cookies, no fingerprinting, no
+third-party fonts. The only analytics is Cloudflare Web Analytics — anonymous, cookie-less
+page-view counts; no personal data, no cross-site tracking.
 
 ## local development
 
