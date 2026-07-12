@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="inkwell">
+  <defs>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#3730a3" />
+    </linearGradient>
+  </defs>
+  <!-- inkwell body -->
+  <path d="M7 15 h18 a2 2 0 0 1 2 2 v6 a5 5 0 0 1 -5 5 H10 a5 5 0 0 1 -5 -5 v-6 a2 2 0 0 1 2 -2 Z" fill="url(#ink)"/>
+  <rect x="11" y="12" width="10" height="4" rx="1.5" fill="#3730a3"/>
+  <!-- pen nib dipping in -->
+  <path d="M22 3 L26 7 L15.5 17.5 L13 18.5 L14 16 Z" fill="#1e1b4b" stroke="#c7d2fe" stroke-width="0.8" stroke-linejoin="round"/>
+  <path d="M15.5 17.5 L14 16" stroke="#c7d2fe" stroke-width="0.8"/>
+  <!-- ink drop -->
+  <circle cx="16" cy="22" r="2.4" fill="#e0e7ff"/>
+</svg>

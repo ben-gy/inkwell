@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#4338ca" />
+
+    <title>inkwell — sign &amp; fill PDFs in your browser</title>
+    <meta
+      name="description"
+      content="Sign, initial, date and fill PDFs right in your browser. Nothing is uploaded — your document never leaves your device. Free, no account, works offline."
+    />
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:title" content="inkwell — sign &amp; fill PDFs in your browser" />
+    <meta
+      property="og:description"
+      content="Sign and fill PDFs locally. Your document never leaves your device. No uploads, no account, no watermark."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Security: CSP restricts everything to self. No third-party anything. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none';"
+    />
+
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="inkwell home">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+              <linearGradient id="iw-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#3730a3" />
+              </linearGradient>
+            </defs>
+            <path d="M7 15 h18 a2 2 0 0 1 2 2 v6 a5 5 0 0 1 -5 5 H10 a5 5 0 0 1 -5 -5 v-6 a2 2 0 0 1 2 -2 Z" fill="url(#iw-grad)" />
+            <rect x="11" y="12" width="10" height="4" rx="1.5" fill="#3730a3" />
+            <path d="M22 3 L26 7 L15.5 17.5 L13 18.5 L14 16 Z" fill="#1e1b4b" stroke="#c7d2fe" stroke-width="0.8" stroke-linejoin="round" />
+            <circle cx="16" cy="22" r="2.4" fill="#e0e7ff" />
+          </svg>
+          <span class="brand-name">ink<span class="brand-name-accent">well</span></span>
+        </a>
+
+        <div class="trust-badge" data-modal="tmpl-security" role="button" tabindex="0" title="How your privacy is protected">
+          <span class="trust-dot"></span>
+          <span class="trust-text">Runs in your browser · nothing is uploaded</span>
+        </div>
+
+        <nav class="topbar-nav">
+          <button type="button" class="nav-link" data-modal="tmpl-how-it-works">how it works</button>
+          <button type="button" class="nav-link" data-modal="tmpl-security">privacy</button>
+          <button type="button" class="nav-link" data-modal="tmpl-about">about</button>
+          <button type="button" class="nav-link nav-drawer-toggle" id="drawer-toggle" aria-pressed="false">activity</button>
+        </nav>
+      </header>
+
+      <div class="main-grid">
+        <main id="app"><!-- populated by src/main.ts --></main>
+        <aside id="event-drawer" class="event-drawer" aria-label="activity log" hidden><!-- populated by src/eventlog.ts --></aside>
+      </div>
+
+      <footer class="statusbar">
+        <div class="statusbar-left">
+          <span class="status-pill">
+            <span class="dot-mini idle" id="sb-status-dot"></span>
+            <span class="label" id="sb-status-label">ready</span>
+          </span>
+          <span id="sb-doc" class="status-doc"></span>
+        </div>
+        <div class="statusbar-right">
+          <span class="attribution">Built by <a href="https://benrichardson.dev/" target="_blank" rel="noopener noreferrer">benrichardson.dev</a></span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ───────────────── how it works ───────────────── -->
+    <template id="tmpl-how-it-works">
+      <div class="modal-content">
+        <h2 class="modal-title">how inkwell works</h2>
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <div>
+              <h3>open your PDF</h3>
+              <p>Drop the document in. It's read straight into this browser tab with
+                <span class="glossary-link" data-term="pdfjs">pdf.js</span> and every page is drawn
+                onto a canvas. No copy is sent anywhere.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <div>
+              <h3>make your signature</h3>
+              <p>Draw it with your finger or trackpad, type your name in a handwriting style, or
+                upload a photo of a signature. It's turned into a transparent image right here.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <div>
+              <h3>place &amp; fill</h3>
+              <p>Drop your signature, initials, typed text, a date, or a checkmark onto any page.
+                Drag to move, pull the handle to resize.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <div>
+              <h3>save the signed PDF</h3>
+              <p><span class="glossary-link" data-term="pdflib">pdf-lib</span> writes everything you
+                placed back into the original document and hands you a fresh
+                <code>-signed.pdf</code> to download or share. All of it happened on your device.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </template>
+
+    <!-- ───────────────── threat model ───────────────── -->
+    <template id="tmpl-security">
+      <div class="modal-content">
+        <h2 class="modal-title">privacy &amp; threat model</h2>
+        <p class="modal-lede">inkwell is a static web page. Once it has loaded, signing a document
+          makes <strong>zero network requests</strong> — you can even turn off your Wi-Fi and it
+          keeps working.</p>
+        <div class="security-grid">
+          <div class="security-card good">
+            <h3>what's protected</h3>
+            <ul>
+              <li>Your PDF — parsed, rendered and re-saved entirely inside this tab.</li>
+              <li>Your signature — drawn, typed or uploaded locally and embedded locally.</li>
+              <li>Everything you type — names, dates, notes only ever go into your local file.</li>
+              <li>Nothing is stored. Reload the page and every trace is gone.</li>
+            </ul>
+          </div>
+          <div class="security-card bad">
+            <h3>what isn't</h3>
+            <ul>
+              <li>The initial page load comes from GitHub Pages, so its CDN sees your IP fetching
+                the app — the same as visiting any website. It never sees your document.</li>
+              <li>If you tap the native <em>Share</em> sheet, the app you pick then receives the
+                file. That's you choosing to send it.</li>
+              <li>inkwell adds a <em>visible</em> signature. It is not a cryptographic / digital
+                (PKI) signature and doesn't prove tamper-evidence.</li>
+            </ul>
+          </div>
+          <div class="security-card">
+            <h3>trust surface</h3>
+            <ul>
+              <li>The static bundle served over HTTPS from GitHub Pages.</li>
+              <li>The TLS chain between your browser and GitHub Pages.</li>
+              <li>No third-party scripts, fonts, trackers, cookies or analytics. Open the Network
+                tab and watch — after load, it stays silent.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ───────────────── about ───────────────── -->
+    <template id="tmpl-about">
+      <div class="modal-content">
+        <h2 class="modal-title">about inkwell</h2>
+        <p>inkwell signs and fills PDFs without uploading them. It exists because the honest way
+          to sign a sensitive contract online is to never let it leave your device in the first
+          place.</p>
+        <p>It's built with <span class="glossary-link" data-term="pdfjs">pdf.js</span> for rendering
+          and <span class="glossary-link" data-term="pdflib">pdf-lib</span> for writing, in plain
+          TypeScript, with no backend and no runtime dependencies beyond those two libraries.</p>
+        <p class="about-links">
+          <a href="https://benrichardson.dev/" target="_blank" rel="noopener noreferrer">benrichardson.dev</a>
+          <span class="dot-sep">·</span>
+          <a href="https://github.com/ben-gy/inkwell" target="_blank" rel="noopener noreferrer">source on GitHub</a>
+        </p>
+        <p class="about-fineprint">inkwell provides visible signatures for everyday documents. It is
+          not legal advice and does not create a qualified electronic signature.</p>
+      </div>
+    </template>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
