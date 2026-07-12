@@ -24,10 +24,11 @@
     <!-- Security: CSP restricts everything to self. No third-party anything. -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none';"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: https://cloudflareinsights.com; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
     />
 
     <link rel="stylesheet" href="/src/styles/main.css" />
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ba2bab2193ba42c1bea3d6714fcd0e28"}'></script>
   </head>
   <body>
     <div class="app-shell">
@@ -75,7 +76,7 @@
           <span id="sb-doc" class="status-doc"></span>
         </div>
         <div class="statusbar-right">
-          <span class="attribution">Built by <a href="https://benrichardson.dev/" target="_blank" rel="noopener noreferrer">benrichardson.dev</a></span>
+          <span class="attribution">Built by <a href="https://benrichardson.dev/" target="_blank" rel="noopener noreferrer">benrichardson.dev</a> · <a href="https://hub.benrichardson.dev" target="_blank" rel="noopener">more tools &amp; sites</a></span>
         </div>
       </footer>
     </div>
@@ -156,7 +157,7 @@
             <ul>
               <li>The static bundle served over HTTPS from GitHub Pages.</li>
               <li>The TLS chain between your browser and GitHub Pages.</li>
-              <li>No third-party scripts, fonts, trackers, cookies or analytics. Open the Network
+              <li>No third-party fonts, trackers or cookies. The only third-party script is the Cloudflare Web Analytics beacon — anonymous, cookie-less page-view counts with no personal data and no cross-site tracking. Open the Network
                 tab and watch — after load, it stays silent.</li>
             </ul>
           </div>

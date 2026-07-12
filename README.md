@@ -72,7 +72,7 @@ size and rotation for any page /Rotate value — and is fully unit-tested in iso
 
 **Trust model**
 - The static site bundle served over HTTPS from GitHub Pages, and the TLS chain to it.
-- No third-party scripts, fonts, trackers, cookies or analytics. After load, the Network
+- No third-party fonts, trackers or cookies. The only third-party script is the Cloudflare Web Analytics beacon — anonymous, cookie-less page-view counts with no personal data and no cross-site tracking. After load, the Network
   tab stays silent.
 
 ## stack
