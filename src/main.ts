@@ -3,6 +3,11 @@
  * global keyboard shortcuts. Owns no business logic.
  */
 
+// feedback:begin (managed by hub/scripts/feedback/backfill.mjs)
+import { mountFeedback } from './feedback';
+mountFeedback();
+// feedback:end
+
 import './styles/main.css';
 import { Workspace } from './workspace';
 import { initModalTriggers } from './ui';
