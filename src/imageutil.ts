@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Ben Richardson — https://benrichardson.dev
+// Additional terms under AGPL-3.0 section 7(b) apply; see ADDITIONAL-TERMS.md.
 /**
  * Pure image helpers operating on raw RGBA buffers, so they can be unit-tested
  * without a real canvas. The DOM-bound wrappers live in signature.ts.
