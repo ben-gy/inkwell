@@ -66,6 +66,16 @@ export class Workspace {
     hint.appendChild(document.createTextNode('PDF documents · signed entirely in your browser'));
     zone.appendChild(hint);
 
+    const sampleBtn = h('button', { type: 'button', class: 'sample-link', id: 'sample-btn' }) as HTMLButtonElement;
+    sampleBtn.appendChild(icon('file', 'sample-ic'));
+    sampleBtn.appendChild(h('span', {}, 'Try a sample agreement'));
+    sampleBtn.addEventListener('click', (e) => {
+      // The pill lives inside the dropzone, whose click opens the file picker.
+      e.stopPropagation();
+      void this.loadSample();
+    });
+    zone.appendChild(sampleBtn);
+
     const input = h('input', { type: 'file', accept: 'application/pdf,.pdf', class: 'visually-hidden' }) as HTMLInputElement;
     zone.appendChild(input);
 
@@ -133,6 +143,20 @@ export class Workspace {
       emit('doc', 'err', 'Failed to open PDF', { error: (err as Error).message });
       setStatus('ready', 'idle');
       this.showDropzone();
+    }
+  }
+
+  /** Load the bundled demo agreement through the exact same path as a real upload. */
+  async loadSample(): Promise<void> {
+    try {
+      emit('doc', 'info', 'Loading sample document');
+      const res = await fetch('samples/demo.pdf');
+      if (!res.ok) throw new Error(`sample fetch ${res.status}`);
+      const blob = await res.blob();
+      await this.loadFile(new File([blob], 'sample-agreement.pdf', { type: 'application/pdf' }));
+    } catch (err) {
+      toast('Couldn’t load the sample.', 'err');
+      emit('doc', 'err', 'Sample failed to load', { error: (err as Error).message });
     }
   }
 
